@@ -29,8 +29,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <div class="notes">
 
-Hello, everyone, my name is Hao Zhang, and I worked in the H&H modeling group. Today I'm gonna talk about a few data analysis projects that I've been worked on, and I'd like to share a few R packages that you may found useful. 
-
+Hello, everyone, I'm Hao Zhang from the H&H modeling group. First of all I want to appologize my reschedualing this HMMM talk as my daughter had a fever the day before the presentation. Today I'm gonna talk about 4 data analysis projects that I've worked on lately. After each project, I'll talk about the R packages that I found useful for the project, I will not go into too much details, but if you feel interested on some the topics, please let me know after the presentation, I'd be happy to provide you with more information. 
 </div>
 
 ## Introduction of R {.build}
@@ -65,8 +64,8 @@ Hello, everyone, my name is Hao Zhang, and I worked in the H&H modeling group. T
 
 <div class="notes">
 
-At the H&H modeling group, we deal with large amount of data everyday. 
-I've been actively using R for 3 years for data analysis, and I'm quite enjoy using it. 
+I've been actively using R for 3 years at the H&H modeling group, as we deal with large amount of data everyday. 
+
 Inherit from the language S, R is a powerful tool for statistics and data visualization. 
 I'd like to mention that R is also a fully-wedged programming language just like python and java.
 
@@ -499,25 +498,6 @@ Another advantage of plotly is that it has a ggplot wrapper that will convert yo
 
 </div>
 
-##
-
-**`ggvis` package**: create interactive graphics with a syntax similar to ggplot2
-
--  leverage shiny's infrastructure, e.g., sliders, buttons
-
--  still under development (v0.4 now), may experiencing dramatic syntax change
-
-<http://ggvis.rstudio.com/>
-
-**`googleVis` package**
-
--  developed by Google, primarily for BI purposes
-
--  has many types of charts, maps, and tables
-
-<https://developers.google.com/chart/interactive/docs/gallery>
-
-
 ## `ggvis` package {.smaller}
 
 Create interactive graphics with a syntax similar to ggplot2
@@ -864,14 +844,16 @@ This is an example showing the multi-process versus single-process version. As s
 
 -   Develop a workflow for updating the database
     
-    -   data processing
-    -   referential integrity
-    -   database management: backup, restore
+-   Database management: backup, restore
         
 -   Build a front-end (Dashboard, views)
     
     -   shiny App
     -   deployment
+
+-   Integration to other apps
+
+    -   Post-storm analysis
 
 <div class="notes">
 
@@ -942,9 +924,11 @@ Since none of them are perfect, I've found an alternative method that uses the x
 **`purrr` package**: 
 
 -   **functional programming**: split a data frame into pieces, apply a process to each piece, e.g., fit a model, then summaries/extract results
+
 -   `map()`: `*apply()` with uniform syntax
 
 ```{r echo=T, eval=F}
+library(tidyverse)
 mtcars %>%
   split(.$cyl) %>%
   map(~ lm(mpg ~ wt, data = .x)) %>%
@@ -958,9 +942,17 @@ mtcars %>%
 
 </div>
 
+<div class="notes">
+
+for data manipulation, the auther of the dplyr and tidyr has grouped a collection of data manipulation packages into a package called 'tidyverse'. Besides the dplyr and tidyr packages, it also contains a package called 'purrr' for functional programming. For example, to calculate the r-square of the linear regressions for mileage versus weight by each cylinder size, you can pipeline the operations like this. 
+
+The package also includes the ggplot2 for charting, and readr for fast file reading.
+
+</div>
+
 ***
 
-**`data.table` package**:subset rows, select and compute on columns and perform aggregations by group 
+**`data.table` package**: subset rows, select and compute on columns and perform aggregations by group 
 
 <div class="columns-2">   
 
@@ -974,10 +966,8 @@ mtcars %>%
 
 -  inherits from `data.frame` class
 
--  `fread()` : blazing fast data reader
+-  `fread()` : <span style="color:red;">blazing</span> fast data reader
 
-<br>
-<br>
 <br>
 <br>
 <br>
@@ -993,6 +983,12 @@ mtcars %>%
     +   inner join: `Y[X, on='a', nomatch=0L]`
     +   nonequi join: `X[Y, on=c("x>=a", "y<=b")]`
     +   rolling join: `X[Y, roll=T]`
+
+</div>
+
+<div class="notes">
+
+The data.table package is another useful package for data manipulation. The package utilizes several advance algorithm, and therefore is very fast on subsetting and can handle large datasets. The syntax is quite concise, the first element is refering to the WHERE clause in a SQL statement, and the second is the SELECT, and the third is the BY. The package also comes with robust joining functions that can do nonequal join and rolling join as well.
 
 </div>
 
@@ -1015,7 +1011,7 @@ mtcars %>%
     +  `sqlQuery()`
     +  `sqlSave()`
     
-**`RPostgreSQL` package**
+**`RPostgreSQL` package (dependent to `DBI`)**
 
 -  `dbDriver()`
 -  `dbConnect()`
@@ -1031,6 +1027,11 @@ mtcars %>%
 
 </div>
 
+<div class="notes">
+
+For making database connections, the RODBC package is useful for connecting to Access database or other connections through ODBC; For Postgres, there is a RPostgreSQL package that makes connections to Postgres databases utilizing the functions in the DBI package. 
+
+</div>
 
 ## Documentation
 
@@ -1044,7 +1045,7 @@ mtcars %>%
 **R notebook**
     
 -  cache results
--  good for log analysis
+-  good for reproducible research
 
 **R Shiny**
 
@@ -1053,18 +1054,24 @@ mtcars %>%
 
 **R presentation**
     
--  `Rpres`: good for simple, non-interactive presentations
+-  `Rpres`: for quick, simple slides
     
     +   "Battery Included"
-    
--  `ioslides`: good for interactive presentations 
+ 
+-  <span style="color:red;">`ioslides` (HTML) </span>
     
     +   code highlighting
     +   Presenter mode
     
--  `slidy`: similar to ioslides
--  `reveal.js`: similar to ioslides
--  `beamer`: good for pdf slides
+-  `slidy` (HTML)  
+-  `reveal.js` (HTML)  
+-  `beamer` (pdf)
+
+</div>
+
+<div class="notes">
+
+R also comes with a few documentation packages. The Rmarkdown package generates interactive HTML documents. The R notebook caches results and is therefore good for reproducible research. Shiny is another option for demostrating dynamic contents. For presentation, there are several options, such as the Rpres, ioslides, slidy, reveal.js and beamer. This presentation is made in ioslides.
 
 </div>
 
@@ -1091,3 +1098,6 @@ Hao Zhang, Ph.D.
 
 hao.zhang@phila.gov
 
+<div class="notes">
+That all for my presentation, I strongly encourage you using R for your daily job if you haven't started yet, I know a few coworkers of mine have been using R, so if you encountered any trouble using it, you can always turn to us, or there may be already an answer at stack overflow. Thank you.
+</div>
