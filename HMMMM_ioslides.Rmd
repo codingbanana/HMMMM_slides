@@ -329,8 +329,10 @@ Evaluate the impact of tide levels on Philadelphia's Combined Sewer system:
 As an effort of model updates, the H&H modeling group had conducted a field survey for Philadelphia's regulators in 2015 to confirm or update the regulators' critical elevations, such as weir crest elevation and overflow invert elevation. The result was presented as a web application that demostrates the actual elevation of the critical elevations, and generates the cumulative density function plots by interceptor. The app is developed in R's shiny framework, with the plot made in ggplot2. To overlay tooltips on the plots, some hacks was done on the app-level. The app is then deployed on a shiny server, hosted by the Amazon Web Service. 
 </div>
 
-***
-<iframe src="http://52.90.33.211/DamElevCDF/" style="border: 0; position:absolute; top:0; left:0; right:0; bottom:0; width:100%; height:100%"></iframe>
+## {.smaller}
+<http://52.90.33.211/DamElevCDF/>
+
+<iframe src="http://52.90.33.211/DamElevCDF/" style="border: 0; position:absolute; top:1; left:0; right:0; bottom:0; width:100%; height:84%"></iframe>
 
 <div class="notes">
 
