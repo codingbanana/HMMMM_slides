@@ -63,16 +63,9 @@ Hello, everyone, I'm Hao Zhang from the H&H modeling group. First of all I want 
 </div>
 
 <div class="notes">
+Our group has been using R for multiple modeling tasks, so what is R? First of all, R is a powerful statistics tool for data analysis and data visualization. Rajesh used to say R is the Excel on Steiods, and I agree with his definition. Besides, I'd like to mention that R is also a fully-wedged programming language just like python and java, so it can do all things that other language can do.
 
-I've been actively using R for 3 years at the H&H modeling group, as we deal with large amount of data everyday. 
-
-Inherit from the language S, R is a powerful tool for statistics and data visualization. 
-I'd like to mention that R is also a fully-wedged programming language just like python and java.
-
-The biggest advantage of R is the vectorized operation, which allows you to apply an operation to a series of data without using a loop. Another advantage is R has a mature user-supported community and over 10 thousands open source packages. 
-
-Okay, let's start with the first project.
-
+For me, I feel the biggest advantage of R is the vectorized operation, which allows you to apply an operation to a series of data without using a loop, and therefore it's very fast. Another advantage is R's mature user-supported community, the CRAN repository currently holds over 10 thousands open source packages. 
 </div>
 
 # Tidal zone development for the Delaware and Schuylkill Rivers
@@ -100,11 +93,11 @@ Categorize the Delaware and Schuylkill rivers in Philadelphia into tidal zones, 
 
 <div class="notes">
 
-The delaware river and schulykill river are both tidal, and the phase difference between the downstream and upstream can be as much as 1 hour. 
+The delaware river and schulykill river are both tidal, and the phase difference between downstream and upstream can be as much as 1 hour. 
 
-As an effort to the model update, the philadelphia region of these two river needs to be categorized into tidal zones, so that each regulator outfall can have a more representative tide time-series as the boundary condition. 
+As an effort to the model update, the philadelphia region of these two rivers were categorized into 5 tidal zones, so that each regulator outfall can have a more localized tide time-series as the model boundary condition. 
 
-To do that, a harmonic analysis was performed on 9 nearby NOAA stations, and the parameters of the primary semi-diurnal constituent is fitted linearly against the river miles. The phase is represented by the time difference relative to the NOAA Philadelphia station, The magnitude is represented by the Local Mean Sea Level at NAVD88, converted by NOAA’s Vdatum software, and the amplitude is the maximum height of wave crest or though. 
+Harmonic analysis was performed on 9 nearby NOAA stations, and the parameters of the M2, which is the primary semi-diurnal constituent, were fitted linearly against the river miles. The phase is represented by the time difference relative to the NOAA Philadelphia station, The magnitude is represented by the Local Mean Sea Level at NAVD88, converted by NOAA’s Vdatum software, and the amplitude is the maximum height of wave crest or though. 
 
 </div>
 
@@ -126,9 +119,9 @@ To do that, a harmonic analysis was performed on 9 nearby NOAA stations, and the
 <div class="notes">
 As shown, the time difference and local mean sea level both fit well to linear relationships. To better represent the local conditions, the 3 stations within the city boundary were used for interpolation,  including the Philadelphia, the Bridesburg, and the Tacony-Palmyra Bridge. (The Pier 11 station was excluded as its M2 parameters appear to be an outlier.)
 
-Since the amplitude depends on the bathymetry and morphology of the river, the amplitude doesn’t show a good linear fit. Since the amplitude varied by less than 0.2 ft, the amplitude adjustment is not applied as of now.
+Since the amplitude depends on the bathymetry and morphology of the river, the amplitude doesn’t show a good linear fit. Since the amplitude varied by less than 0.2 ft, the amplitude adjustment is not applied.
 
-To balance the complexity and performance of the model, the zonal boundary is set to 15 minutes of phase difference. The centroid of zone 1 is at the NOAA Philadelphia station, and the other zones were determined accordingly by interpolation. The tidal schulykill river is classified as one tidal zone according to the level data monitored at the regulator outfalls, which is 15 minute ahead of zone 1.
+To balance the complexity and performance of the model, the zonal boundary is set to 15 minutes of phase difference. The centroid of zone 1 is set to the NOAA Philadelphia station, and the other zones were determined accordingly by interpolation. The tidal schulykill river has only one tidal zone according to the level data monitored at the regulator outfalls.
 </div>
 
 ***
@@ -145,19 +138,18 @@ To balance the complexity and performance of the model, the zonal boundary is se
 </div>
 
 <div class="notes">
-The adjustment coefficients are shown here.
-The Delaware River is therefore categorized as 4 tidal zones, each delayed by 15 minutes and offset by 0.06 ft in tide level. As shown, the adjusted time series match closely to the observations at the NOAA tide stations for each tidal zone.
-For Schulykill River, the adjustment parameters are extrapolated to the junction of the Schuylkill River and the Delaware River at R.M 92.5, and the adjusted time-series is validated by the observations at the USGS tide station.
-</div>
-***
 
+The Delaware River is categorized as 4 tidal zones, each delayed by 15 minutes and offset by 0.06 ft in tide level. For Schulykill River, the adjustment parameters are extrapolated to the junction of the Schuylkill River and the Delaware River at R.M 92.5. As shown, the adjusted time series match closely to the observations at the NOAA tide stations for each tidal zone.
+</div>
+
+***
 <iframe src="SWOs_Validation_new.nb.html" style="border: 0; position:absolute; top:0; left:0; right:0; bottom:0; width:100%; height:100%"></iframe>
 
 <div class="notes">
-the adjusted tides are validated against the levels at regulator outfalls for the week of July 22, 2016. 
-This plot shows the The water levels on the Tidal Schuylkill River, which do not show a visible phase shift like the Delaware River, This could be related to the Seiche effect caused by the Fairmount Dam, where a standing wave is formed in the partially enclosed body of water. In addition, the rising-tide shows a step-like pattern with regular intervals, which could be related to the hydraulic-wake caused by the bends of the river.
+the adjusted tides are further validated against the water levels at regulator outfalls. 
+As shown, the tidal Schuylkill River do not show a visible phase shift like the Delaware River, which could be related to the Seiche effect caused by the Fairmount Dam, where a standing wave is formed in the partially enclosed body of water. In addition, the rising-tide shows a step-like pattern with regular intervals, which could be related to the hydraulic-wake caused by the bends of the river.
 
-These plots are generated by the dygraphs package, which will be covered in the next few slides.
+These plots are generated by the dygraphs package, which is very useful for making interactive time-series.  
 
 </div>
 
@@ -205,9 +197,9 @@ hfit <- ftide(tide$v, tide$t, hc7)
 
 <div class="notes">
 
-The rnoaa package provides a R interface to the NOAA data set, which is useful for downloading meteorlogical and climatical data, such as tide data.  This example shows how to download tide data at the philadelphia station.
+The rnoaa package provides a R interface to the NOAA data set, you can use it for downloading meteorlogical and climatical data from NOAA API.  This is a sample code for downloading 1 month of tide data at the philadelphia station.
 
-The TideHarmonics package is the T-tide equivalent in R, which can do harmonic analysis with over 400 constituents. This example shows how to get the 7 principle constituents from the tide data. 
+The TideHarmonics package is the T-tide equivalent in R, the ftide function can do harmonic analysis with over 400 constituents. In this example, the 7 principle constituents are calculated for the tide data. 
 
 </div>
 
@@ -257,9 +249,13 @@ rollapply(nottem, 2, mean, by=3)
 </div>
 
 <div class="notes">
-For time handling, the zoo package and xts package both provide an object for time-series. In addition, the na family functions are capable of filling irregular time steps with various algorithms. This example demostrates the difference between the imputation algorithms. Besides, The roll family functions are handy for calculating moving averages and etc.
+The zoo package and xts package both provide an object for time-series data.
+I should remind you that the zoo is for Z's ordered observations, not for the wild animals.  
+The zoo package also include a series of data imputation functions for filling missing time stamps. This example demostrates the multiple algorithms used for the imputation. For example, na.locf means 'last observation carried forward'. Normally, the linear is sufficient when the gap is not too big.
 
-The xts comes with an elegant subsetting method, for example, to subset the data from 6am to 6pm , simply use slash between the start and end time. This can be handy for calculating the nightly minumum flow. 
+Another useful function is the roll family functions, they are handy for applying window functions, such as calculating moving averages and etc.
+
+The xts extends zoo, and it has an elegant subsetting method, for example, to subset data between 6am and 6pm , simply use slash between the start and end time.  
 </div>
 
 ***
@@ -268,7 +264,7 @@ The xts comes with an elegant subsetting method, for example, to subset the data
 
 -  `parse_date_time(), fast_strptime(), ymd_hms()`: parse character vector to POSIXct
 
-**Reminder**: different than `as.POSIXct()` or `strptime()`,  the time zone is set to UTC by default
+**Reminder**: the default time zone is 'UTC' instead of local time zone
         
 -  `rollback()`: roll back date to last day of previous month, or the first day of this month 
     
@@ -290,19 +286,19 @@ dygraphs(data,
          width = NULL, height = NULL)
 ```
 
-
 -  data must be `xts` class or equivalent
 -  use `mts` object for multi- time-series
 -  returns a HTML widget
+
 </div>
 
 <div class="notes">
 
-The lubridate package is useful for handling date and time. It comes with 3 parse functions, the parse_date_time() can guess the format by a few combination, and therefore is good for mixed format or unknown format. The fast_strptime() can only handle numeric format and it's faster than the base strptime() function; the ymd_hms() is flexible on the format as long as the order is correct. The only thing I find annoying is that these parsers set timezone to UTC by default, therefore, you need to specify the time zone in the function.
+The lubridate package is useful for handling datetime data. It comes with 3 parse functions, the parse_date_time() can guess the format by a few combination, and therefore is good for mixed format or unknown format. The fast_strptime() can only handle numeric format and it's faster than the base strptime() function; the ymd_hms() is flexible on the format as long as the order is correct. The only thing I find annoying is that these parsers set timezone to UTC by default, therefore, you need to specify the time zone in the function.
 
-The rollback() function is useful to round the datetime to the nearest even time stamp. The with_tz() and force_tz() functions are useful for adjusting the Daylight Savings Time and time zones.
+The rollback() function rounds datetime to the last day of the last month or the first day of the current month. The with_tz() and force_tz() functions can help adjusting the Daylight Savings Time and time zones.
 
-The dygraphs package generates nice looking time-series plots with tooltips with simple syntax. The function takes an xts object and output an HTML widget, which can be easily emeded into an interactive document such as Rmarkdown or Rnotebook. 
+As shown in the previous example, the dygraphs package generates nice looking time-series plots with many features such as zoom, pan, and tooltips. The function has a straightforward syntax that takes an xts object and returns an HTML widget, which can be easily emededed into an interactive document.
 </div>
 
 # Tide and SLR Impact Analysis on CSO Regulators
@@ -325,7 +321,7 @@ Evaluate the impact of tide levels on Philadelphia's Combined Sewer system:
 -   deployed on a shiny server, hosted by Amazon Web Service (AWS)
 
 <div class="notes">
-As an effort of model updates, the H&H modeling group had conducted a field survey for Philadelphia's regulators in 2015 to confirm or update the regulators' critical elevations, such as weir crest elevation and overflow invert elevation. The result was presented as a web application that demostrates the actual elevation of the critical elevations, and generates the cumulative density function plots by interceptor. The app is developed in R's shiny framework, with the plot made in ggplot2. To overlay tooltips on the plots, some hacks was done on the app-level. The app is then deployed on a shiny server, hosted by the Amazon Web Service. 
+As an effort of the model update, our group had conducted a field survey in 2015 for updating the critical elevations of Philadelphia's regulators in the model. The weir crest elevation and overflow invert elevations were measured and presented as a web application. The actual elevation of the critical elevations are plotted by interceptor, and cumulative density function plots are generated for user-specified interceptors. The app was developed in R's shiny framework, plots were made in ggplot2 with some hacks to overlay tooltips. The app is currently deployed on a shiny server hosted by the Amazon Web Service. 
 </div>
 
 ## {.smaller}
@@ -335,13 +331,9 @@ As an effort of model updates, the H&H modeling group had conducted a field surv
 
 <div class="notes">
 
-The app is showing here. Users can specify the interceptors to be included in the CDF, and changes the scales of the axes. The plots comes with 4 annotations such as the MHHW and MLLW at 2085, and users can add more annotations as needed. The tooltip shows the value of the data when hovered over. 
+This is how the app look like. Users can specify interceptors for the CDF plot, and make changes to the axes scales. The plots come with 4 annotations such as the MHHW and MLLW at 2085, and users can add as many annotations as needed. Regulator information will be shown when hovered over. 
 
-This plot shows the same data in the form of box-whiser plot. 
-
-This plot shows the actual elevations by interceptor, and it also shows if a tide gate or flap gate has been installed. The regulator is sorted by the distance to the downstream WPCP, and it can also be plotted using the actual distance. 
-
-This table summaries the stats by interceptor.
+This plot shows the actual elevations by the interceptor, whether a tide gate or flap gate has been installed are marked by colors. The regulator is sorted by the distance to the downstream WPCP, and it can also be plotted as the actual distance. 
 
 </div>
 
@@ -389,9 +381,11 @@ shinyApp(ui = ui, server = server)
 
 <div class="notes">
 
-A shiny app normally comes with 2 parts. the 'server' handles the backend computation and event-triggering, and the 'UI' provides an interface for input and output, optionally, there is a 'global' module that contains non-reactive functions and constants, etc. 
+Next, I'd like to introduce a few data visualization options in R.
 
-The app can be deployed on local machine, remote server such as AWS with shiny server, and cloud-services, such as shinyapps.io.
+Shiny app is a web application that is served by a shiny server. It can be deployed on local machine, remote server such as AWS with shiny server, and cloud-services, such as shinyapps.io. Once the app is running, user can use the application through a web browser, anytime, anywhere, just like checking your mobile bank.  
+
+A shiny app normally comes with 2 parts. the 'server' handles the backend computation and events handling, and the 'UI' provides an interface for input and output, When any of the 'reactive' object is altered, the system will automatically recalcuate the affected output, and that how it can show dynamic content. Optionally, there is a 'global' module for non-reactive functions and constants, etc. 
 
 </div>
 
@@ -440,7 +434,7 @@ g <- grid.arrange(gA,gB, ncol=1, heights=unit(rep(1.5,2),'in'), widths=unit(5,'i
 
 <div class="notes">
 
-ggplot is probably the most popular charting tool in R. It generates plots in various formats using a consistent syntax that adopted from the Grammar of Graphics.  The ggedit package is a shiny widget that let you set the layouts in GUI. It's useful for setting complicated layout of a ggplot. Also, the grid() and gridExtra() packages are useful for making collage plots.  
+ggplot is probably the most popular charting tool in R. It generates plots in various formats using a consistent syntax based on the book 'Grammar of Graphics'. When editing the layouts of a complicated ggplot, I find the ggedit add-on useful, as it lets you set the layouts in GUI via a shiny widget. Also, the grid() and gridExtra() packages are useful when you need to combine plots for publication.  
 
 </div>
 
@@ -488,13 +482,11 @@ htmlwidgets::saveWidget(p, file="plotly.html")
 ```
 <iframe src='plotly.html' height=300 weight=450></iframe>
 
-
 </div>
 
 <div class="notes">
-The plotly package generates interactive plots that can be zoomed, paned, and picked. This example shows the sample code and looks of the plot. 
 
-Another advantage of plotly is that it has a ggplot wrapper that will convert your ggplot to a plotly object. 
+plotly makes multiple types of interactive plots. It also has a ggplot wrapper that converts ggplot to plotly. This is a sample plotly chart, as you can see, the plot can be zoomed, paned, and inspected.
 
 </div>
 
@@ -541,11 +533,17 @@ mtcars %>%
 ```
 </div>
 
+<div class="notes">
+
+ggvis is another interative plotting package utilizing shiny's infrastrure, therefore has a few cool features such as input bars. The package is developed by the same authors of ggplot2 at Rstudio, and is expected to replace ggplot2 in future, however, the package is still under development and you may encounter some major syntax change when you update the package. 
+
+</div>
+
 ## `googleVis` package {.smaller}
 
-developed by Google, primarily for BI purposes
+-  utilizing Google charting API
 
--  includes many intersting types of charts, maps, and tables
+-  primarily for business intelligence, including many intersting types of charts, maps, and tables
 
 <https://developers.google.com/chart/interactive/docs/gallery>
 
@@ -590,6 +588,12 @@ plot(Anno)
 
 </div>
 
+<div class="notes">
+
+googleVis is another interactive plotting package utilizing google charting API, it was primarily designed for business intelligence, and has many finiancial plots such as the stock price chart, but it also has several interesting plots, maps, and tables that may be useful for our work. 
+
+</div>
+
 # Regulator outfall levels breakout and drift detection 
 
 ##  
@@ -611,7 +615,7 @@ PWD has many level sensors installed at regulator outfalls. Over the time, the s
 
 </div>
 
-##  data anomaly/outlier detection {.smaller}
+##  shift-in-trend detection {.smaller}
 
 **`BreakoutDetection` package**
 
@@ -649,17 +653,14 @@ breakout(
 
 <div class="notes">
 
-To do that, I found a package called 'BreakoutDetection' that was developed by Twitter Engineers for their network throughput monitoring. 
+To do that, I found a package called 'BreakoutDetection' that was developed by Twitter Engineers for network throughput monitoring. The package is not yet available in CRAN, but you can compile and install the package from Github.
 
-The breakout is defined as unexpected ramp up/down or mean shift, and it's usually refer to longer, trendy changes in the time-series. The function adopts the algorithm called Enery Divisive with Medians, with a few parameters such as the minimum length of duration of the breakout period, and threholds.
-
-The package is not yet available in CRAN, but you can compile and install the package from Github.
+A breakout is defined as unexpected ramp up/down or mean shift, and it's usually refer to longer, trendy changes in the time-series. The function adopts the algorithm of Enery Divisive with Medians, and includes a few parameters such as the minimum length of duration of the breakout period, and threholds.
 
 This example shows the anlaysis result of D69, as seen, the SWO level had experienced a downward-shift on October 2016, which may be caused by relocation or recalibration of the sensor.
 
-I'm planning to apply this analysis on our flow monitoring data in the future, and I feel that the GSI monitoring group may also find this package useful. 
-
 </div>
+
 ***
 **`AnomalyDetection` package**
 
@@ -679,10 +680,9 @@ AnomalyDetectionTs(x, max_anoms = 0.1, direction = "pos", alpha = 0.05,
 
 -   includes an anomaly detection feature via Adobe's Analytics Reporting API
 
-
 <div class="notes">
 
-There is also an AnomalyDetection package that detects sudden spikes or dips, and the Adobe's Analytics Reporting API also has an anomaly detection feature in the RSiteCatalyst package, but since the water level is flucturated by runoff events, I haven't find much use of these packages for this project.   
+There is also an AnomalyDetection package that detects data anomalies such as sudden spikes or dips, and the RSiteCatalyst package also has such feature utlizing Adobe's Analytics Reporting API, but since outfall levels are flucturated by runoff events, I haven't find much use of these packages for this project.   
 
 </div>
 
@@ -705,7 +705,7 @@ There is also an AnomalyDetection package that detects sudden spikes or dips, an
 
 <div class="notes">
 
-Most computers have multiple processors nowadays. My work station has 24 cores and 32GB memory. By default R only uses one core, but it's not difficult to enable multi-processing in R.
+Most computers have multiple processors nowadays. My work desktop has 24 cores and 32GB memory. By default R only uses one core, but it's not difficult to enable multi-processing in R.
 
 First, you need to create a collection of workers based on the processors on your computer, register and allocate resources for those workers.
 
@@ -851,7 +851,7 @@ This is an example showing the multi-process versus single-process version. As s
     -   shiny App
     -   deployment
 
--   Integration to other apps
+-   Integrate with other apps
 
     -   Post-storm analysis
 
